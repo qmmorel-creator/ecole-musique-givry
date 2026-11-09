@@ -1,0 +1,50 @@
+# Configuration Supabase (CLI) de l'École de Musique de Givry.
+project_id = "ecole-musique-givry"
+
+[api]
+schemas = ["public"]
+max_rows = 1000
+
+[db]
+major_version = 15
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[auth]
+site_url = "https://ecole-musique-givry.netlify.app"
+additional_redirect_urls = ["https://ecole-musique-givry.netlify.app/bureau", "http://localhost:5173/bureau"]
+enable_signup = false
+jwt_expiry = 3600
+
+[auth.email]
+enable_signup = false
+enable_confirmations = false
+otp_expiry = 900
+
+# SMTP Resend pour Supabase Auth (mot de passe = clé API Resend, fournie par secret, jamais dans le dépôt)
+[auth.email.smtp]
+enabled = false
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "env(RESEND_API_KEY)"
+admin_email = "env(MAIL_FROM_ADDRESS)"
+sender_name = "École de Musique de Givry"
+
+[storage]
+file_size_limit = "10MiB"
+
+# Fonctions publiques : appelées avec la clé anon ; la limite d'envois et la validation sont faites dans la fonction.
+[functions.inscription]
+verify_jwt = false
+[functions.recherche-fratrie]
+verify_jwt = false
+[functions.reinscription]
+verify_jwt = false
+# Fonctions du bureau : jeton de connexion obligatoire, rôle vérifié dans la fonction.
+[functions.envoyer-mails]
+verify_jwt = true
+[functions.inviter-membre]
+verify_jwt = true
