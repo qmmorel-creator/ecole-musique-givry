@@ -89,7 +89,7 @@ table.t { width: 100%; border-collapse: collapse; }
 .t th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--line); background: #fafbfc; white-space: nowrap; }
 .t td { padding: 9px 12px; border-bottom: 1px solid var(--line2); vertical-align: middle; }
 .t tr:last-child td { border-bottom: 0; }
-.t .r { text-align: right; }
+.t .r { text-align: right; white-space: nowrap; }
 .t tr.tot td { font-weight: 800; border-top: 1.5px solid var(--ink); background: #fafbfc; }
 .t tbody tr.click { cursor: pointer; }
 .t tbody tr.click:hover td { background: #f7f9fc; }
