@@ -693,6 +693,23 @@ export function createDemoSource(): DataSource {
       save();
     },
 
+    async saveStaff(p) {
+      const actor = requireCap('comptes');
+      const s = load();
+      if (!p.fullName.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) throw new ApiError('Nom et adresse mail valides requis.');
+      if (p.id) {
+        const x = s.staff.find((k) => k.id === p.id);
+        if (!x) throw new ApiError('Compte introuvable.');
+        if (x.id === session()?.staff.id && (!p.active || p.role !== 'presidence')) throw new ApiError('Vous ne pouvez pas retirer vos propres droits de présidence.');
+        Object.assign(x, { fullName: p.fullName.trim(), email: p.email.trim(), role: p.role, active: p.active });
+      } else {
+        s.staff.push({ id: uid(), fullName: p.fullName.trim(), email: p.email.trim(), role: p.role, active: true });
+        mail(s, { to: p.email.trim(), subject: 'Accès à l’espace du bureau · École de Musique de Givry', body: `Bonjour ${p.fullName.trim()},\n\nUn accès à l’espace du bureau vous a été ouvert (rôle : ${p.role}). Connectez-vous avec votre adresse mail : un lien de connexion vous sera envoyé, sans mot de passe.\n\n${siteUrl()}/bureau`, kind: 'connexion', status: 'envoye', sentAt: nowIso(), validatedBy: actor.fullName });
+      }
+      audit(s, actor.fullName, p.id ? 'Compte modifié' : 'Compte invité', 'staff_profiles', p.id ?? null, `${p.fullName} · ${p.role}${p.active ? '' : ' · désactivé'}`);
+      save();
+    },
+
     async purgePreview(): Promise<PurgePreview> {
       requireCap('rgpd');
       return computePurge(load(), false);

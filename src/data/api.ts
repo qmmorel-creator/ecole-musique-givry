@@ -185,6 +185,9 @@ export interface StaffApi {
   saveSeason(s: Season): Promise<void>;
   saveSettings(s: Settings): Promise<void>;
 
+  // Comptes du bureau (présidence) : en Supabase, un nouveau compte reçoit une invitation par mail
+  saveStaff(p: Omit<StaffProfile, 'id'> & { id?: string }): Promise<void>;
+
   // RGPD
   purgePreview(): Promise<PurgePreview>;
   purge(): Promise<PurgePreview>;

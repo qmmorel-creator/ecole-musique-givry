@@ -155,7 +155,7 @@ export function bilanPdf(school: SchoolInfo, bilan: Bilan, today: string): Blob 
     ...tableStyle,
     startY: kpiY + 28,
     head: [['Recettes par catégorie', 'Montant']],
-    body: bilan.recettes.map((r) => [pdfText(r.label + (r.auto ? ' (automatique)' : '')), eur(r.amount)]),
+    body: bilan.recettes.filter((r) => r.amount !== 0).map((r) => [pdfText(r.label + (r.auto ? ' (automatique)' : '')), eur(r.amount)]),
     foot: [['Total des recettes', eur(bilan.totalRecettes)]],
     columnStyles: { 1: { halign: 'right', cellWidth: 40 } },
   });
@@ -163,7 +163,7 @@ export function bilanPdf(school: SchoolInfo, bilan: Bilan, today: string): Blob 
     ...tableStyle,
     startY: lastY(doc) + 8,
     head: [['Dépenses par catégorie', 'Montant']],
-    body: bilan.depenses.map((r) => [pdfText(r.label), eur(r.amount)]),
+    body: bilan.depenses.filter((r) => r.amount !== 0).map((r) => [pdfText(r.label), eur(r.amount)]),
     foot: [['Total des dépenses', eur(bilan.totalDepenses)], ['Résultat de l’exercice'.replace('’', "'"), `${bilan.resultat >= 0 ? '+ ' : '- '}${eur(Math.abs(bilan.resultat))}`]],
     columnStyles: { 1: { halign: 'right', cellWidth: 40 } },
   });
