@@ -1,0 +1,478 @@
+<title>Concept Givry</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Maquette produit à l'image de l'école (bleu du logo, note orange). Parti pris : un seul thème clair, comme l'outil réel ; fonds et couleurs posés explicitement. */
+:root{
+  --accent:#1f78c8; --accent2:#2a8fd6; --accent-soft:#e4f0fb; --accent-ink:#ffffff; --note:#f39a1e;
+  --bg:#f3f5f8; --panel:#ffffff; --ink:#16181d; --muted:#667085; --line:#e4e7ec; --line2:#f0f1f4;
+  --ok:#14804a; --ok-bg:#e3f6ea; --warn:#b54708; --warn-bg:#fdf0dc; --late:#c4320a; --late-bg:#fde7e3;
+  --info:#175cd3; --info-bg:#e5effd; --idle:#475467; --idle-bg:#eef0f3;
+  --r:10px; --sh:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{font:14px/1.45 "Inter",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tnum{font-variant-numeric:tabular-nums}
+.fict{position:fixed;right:26px;top:22px;z-index:50;background:#141414;color:#fff;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:6px 11px;border-radius:999px;opacity:.9;pointer-events:none}
+
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}
+.side{background:linear-gradient(180deg,var(--accent) 0%,var(--accent2) 100%);color:#e8f2fc;padding:18px 12px;display:flex;flex-direction:column;gap:3px}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:14.5px;line-height:1.15;padding:4px 8px 18px}
+.logo i{width:34px;height:34px;border-radius:9px;background:var(--note);display:grid;place-items:center;font-style:normal;font-size:19px;color:#fff;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.logo small{display:block;font-weight:500;color:#cfe3f7;font-size:11px;margin-top:3px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav .grp{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#bcd8f3;font-weight:700;padding:12px 10px 4px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:#eef6fd;text-decoration:none;font-weight:600;font-size:13.5px}
+.nav a:hover{background:rgba(255,255,255,.12)}
+.nav a.on{background:#fff;color:var(--accent);box-shadow:var(--sh)}
+.nav a .ic{width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:11px;flex:none}
+.nav a.on .ic{background:var(--accent-soft)}
+.nav .n{margin-left:auto;background:var(--note);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 8px 4px;border-top:1px solid rgba(255,255,255,.2);font-size:12.5px;color:#fff}
+.side .me .muted{color:#cfe3f7}
+.av{width:30px;height:30px;border-radius:50%;background:#fff3e0;color:#b35c00;display:grid;place-items:center;font-weight:700;font-size:11.5px;flex:none}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:16px 26px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.01em}
+.top .sub{color:var(--muted);font-size:13px}
+.top .sp{flex:1}
+.top .acts{display:flex;gap:8px;margin-right:230px}
+.content{padding:22px 26px 60px;display:flex;flex-direction:column;gap:18px}
+section[data-view]{display:none}
+section[data-view].on{display:contents}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-weight:600;color:var(--ink);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:600;color:var(--muted);cursor:pointer;font-size:13px}
+.seg button.on{background:var(--accent-soft);color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh)}
+.kpi .l{color:var(--muted);font-size:12.5px;font-weight:600}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.kpi .v small{font-size:14px;color:var(--muted);font-weight:600}
+.kpi .d{font-size:12px;margin-top:2px}
+.kpi.alert{border-color:#f7c1b4;background:#fffaf8}
+.kpi .bar{margin-top:8px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;min-width:0}
+.card>header{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.card>header h2{font-size:14.5px;margin:0;font-weight:700}
+.card>header .sp{flex:1}
+.card .body{padding:14px 16px}
+.grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;align-items:start}
+.grid2e{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:18px;min-width:0}
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse}
+.t th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--line);background:#fafbfc;white-space:nowrap}
+.t td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.t tr.tot td{font-weight:800;border-top:1.5px solid var(--ink);background:#fafbfc}
+.t tr.auto td:first-child::after{content:"auto";margin-left:6px;font-size:10px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:99px;vertical-align:1px}
+.b{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.b::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b.ok{color:var(--ok);background:var(--ok-bg)} .b.warn{color:var(--warn);background:var(--warn-bg)}
+.b.late{color:var(--late);background:var(--late-bg)} .b.info{color:var(--info);background:var(--info-bg)}
+.b.idle{color:var(--idle);background:var(--idle-bg)}
+.muted{color:var(--muted)} .sm{font-size:12.5px} .xs{font-size:11.5px}
+.who{display:flex;align-items:center;gap:10px}
+.who .av{background:var(--accent-soft);color:var(--accent);width:28px;height:28px;font-size:11px}
+.who b{display:block;font-size:13.5px}
+.inst{display:inline-flex;align-items:center;gap:7px;font-weight:600}
+.inst i{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-style:normal;color:#fff;font-size:10.5px;font-weight:800}
+.bar{flex:1;min-width:56px;height:7px;border-radius:99px;background:var(--line2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.bar.full i{background:var(--note)}
+.list{display:flex;flex-direction:column}
+.li{display:flex;gap:12px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--line2)}
+.li:last-child{border-bottom:0}
+.li .grow{flex:1;min-width:0}
+.dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+.chk{width:18px;height:18px;accent-color:var(--accent);flex:none;margin-top:1px}
+.fill{display:grid;grid-template-columns:150px 1fr 62px;gap:10px;align-items:center;padding:7px 16px;font-size:13px}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;min-width:220px;color:var(--muted)}
+.ev{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:11px 16px;border-bottom:1px solid var(--line2)}
+.ev:last-child{border-bottom:0}
+.ev .r{text-align:right;font-weight:700}
+.ev .pos{color:var(--ok)} .ev .neg{color:var(--late)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{display:grid;gap:4px;font-size:12px;color:var(--muted);font-weight:600}
+.form .in{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;color:var(--ink);font-weight:500;font-size:13.5px}
+.form .full{grid-column:1/-1}
+.drop{border:1.5px dashed #c8d3e0;border-radius:8px;padding:10px;text-align:center;color:var(--muted);font-size:12.5px;background:#fafcff}
+.chart{display:block;width:100%;height:auto}
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:#174a7c;border-radius:8px;padding:10px 12px;font-size:12.5px}
+
+/* Vue famille : téléphone */
+.stage{display:grid;grid-template-columns:minmax(0,400px) auto;gap:40px;justify-content:center;align-items:center;padding:10px 0}
+.phone{width:390px;height:812px;border:11px solid #141414;border-radius:46px;overflow:hidden;background:var(--bg);box-shadow:0 20px 50px rgba(16,24,40,.25);display:flex;flex-direction:column}
+.phone .scr{flex:1;overflow:auto;display:flex;flex-direction:column}
+.stage-txt{display:grid;gap:12px}
+.stage-txt h2{font-size:24px;margin:0;letter-spacing:-.01em}
+.stage-txt p{margin:0;color:var(--muted)}
+.stage-txt ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.fh{background:linear-gradient(180deg,var(--accent),var(--accent2));color:#fff;padding:34px 18px 16px;display:grid;gap:10px}
+.fh .brand{display:flex;gap:10px;align-items:center;font-weight:700;font-size:14px;line-height:1.15}
+.fh .brand i{width:30px;height:30px;border-radius:8px;background:var(--note);display:grid;place-items:center;font-style:normal;font-size:16px;flex:none}
+.fh .brand small{display:block;font-weight:500;font-size:11px;color:#d7e9fa}
+.fh h3{margin:4px 0 0;font-size:21px;letter-spacing:-.01em}
+.fh .stp{font-size:12px;color:#d7e9fa}
+.prog{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.prog span{height:5px;border-radius:9px;background:rgba(255,255,255,.3)}
+.prog span.on{background:var(--note)}
+.fb{padding:14px;display:flex;flex-direction:column;gap:12px}
+.fc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:grid;gap:10px;box-shadow:var(--sh)}
+.fc h4{margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
+.fc h4 .n{width:22px;height:22px;border-radius:50%;background:var(--note);color:#fff;font-size:12px;display:grid;place-items:center;flex:none}
+.fc h4 .n.done{background:var(--ok)}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.yn button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-weight:700;color:var(--ink);cursor:pointer}
+.yn button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.fin{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fin small{color:var(--muted);font-weight:500;display:block;font-size:11px}
+.match{border:1.5px solid var(--ok);background:#f3fbf6;border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center}
+.match .av{background:#fff;color:var(--ok);border:1px solid #bfe5cd}
+.match b{display:block}
+.igrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.igrid button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 4px 7px;display:grid;justify-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer}
+.igrid button i{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-style:normal;color:#fff;font-size:12px;font-weight:800}
+.igrid button.on{border-color:var(--note);background:#fff7ec;box-shadow:0 0 0 2px #fde2b8}
+.prix{display:grid;gap:6px;font-size:13px}
+.prix div{display:flex;justify-content:space-between;gap:8px}
+.prix .tt{font-weight:800;font-size:17px;border-top:1px solid var(--line);padding-top:8px}
+.prix .red{color:var(--ok);font-weight:700}
+.cta{display:block;width:100%;border:0;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;padding:13px;font-size:15px;cursor:pointer;text-align:center;text-decoration:none}
+
+.mtop{display:none}
+.tabbar{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid2e{grid-template-columns:1fr}.top .acts{margin-right:0}}
+@media (max-width:900px){.stage{grid-template-columns:1fr;justify-items:center}.stage-txt{max-width:390px}}
+@media (max-width:600px){
+  .app{grid-template-columns:1fr}
+  .side,.top{display:none}
+  .mtop{display:flex;align-items:center;gap:10px;padding:14px 16px 12px;background:var(--accent);color:var(--accent-ink);position:sticky;top:0;z-index:5}
+  .mtop h1{font-size:17px;margin:0}
+  .mtop .sub{font-size:12px;opacity:.85}
+  .content{padding:14px 14px 90px;gap:12px}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 4px 18px;z-index:6}
+  .tabbar a{flex:1;text-align:center;font-size:10.5px;color:var(--muted);text-decoration:none;font-weight:700}
+  .tabbar a.on{color:var(--accent)}
+  .tabbar a span{display:block;font-size:16px;line-height:1.3}
+  .fict{top:14px;right:12px;font-size:9.5px;background:rgba(0,0,0,.4)}
+  .fill{grid-template-columns:110px 1fr 50px;padding:7px 12px}
+  .form{grid-template-columns:1fr}
+  body.famille .mtop,body.famille .tabbar,body.famille .stage-txt{display:none}
+  body.famille .content{padding:0}
+  .stage{padding:0;display:block}
+  .phone{width:100%;height:auto;min-height:100vh;border:0;border-radius:0;box-shadow:none}
+  .igrid button{font-size:10.5px}
+  .kpi .v{font-size:22px}
+  .kpi .v small{display:block;font-size:12px}
+}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i>♪</i><div>École de Musique<br>de Givry<small>Inscriptions · élèves · trésorerie</small></div></div>
+    <nav class="nav" id="nav">
+      <a href="#accueil" data-v="accueil"><span class="ic">⌂</span>Accueil</a>
+      <a href="#eleves" data-v="eleves"><span class="ic">♫</span>Élèves</a>
+      <a href="#places" data-v="places"><span class="ic">▦</span>Inscriptions et places <span class="n">7</span></a>
+      <a href="#encaissements" data-v="encaissements"><span class="ic">€</span>Encaissements <span class="n">4</span></a>
+      <a href="#compta" data-v="compta"><span class="ic">≡</span>Comptabilité</a>
+      <span class="grp">Côté familles</span>
+      <a href="#inscription" data-v="inscription"><span class="ic">✎</span>Formulaire en ligne</a>
+    </nav>
+    <div class="me"><span class="av">CD</span><div>Claire D.<div class="muted xs">Trésorière</div></div></div>
+  </aside>
+  <div class="main">
+    <div class="top"><div><h1 id="title"></h1><div class="sub" id="subtitle"></div></div><div class="sp"></div><div class="acts" id="acts"></div></div>
+    <div class="mtop"><div><h1 id="mtitle"></h1><div class="sub" id="msubtitle"></div></div></div>
+    <div class="content">
+
+      <!-- ===== Accueil ===== -->
+      <section data-view="accueil" data-title="Bonjour Claire" data-sub="Lundi 9 novembre · saison 2026-2027" data-acts='<a class="btn" href="#inscription">Voir le formulaire famille</a><a class="btn pri" href="#compta">+ Saisir une dépense</a>'>
+        <div class="kpis" id="k-accueil"></div>
+        <div class="grid2">
+          <div class="stack">
+            <div class="card"><header><h2>À faire cette semaine</h2><span class="sp"></span><span class="muted sm">5 actions</span></header><div class="list" id="todo"></div></div>
+            <div class="card"><header><h2>Derniers encaissements</h2><span class="sp"></span><a class="btn sm" href="#encaissements">Tout voir</a></header><div class="tw"><table class="t" id="t-last"></table></div></div>
+          </div>
+          <div class="stack">
+            <div class="card"><header><h2>Remplissage des cours</h2><span class="sp"></span><a class="btn sm" href="#places">Détail</a></header><div style="padding:8px 0" id="fill-mini"></div></div>
+            <div class="card"><header><h2>Prochain événement</h2></header><div class="body" style="display:grid;gap:6px"><b style="font-size:15px">Audition de Noël · dimanche 13 décembre</b><span class="muted sm">Salle des fêtes de Givry · 26 élèves inscrits · budget prévu 380 €</span><div style="display:flex;gap:8px;margin-top:4px"><a class="btn sm" href="#compta">Budget de l'événement</a></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Élèves ===== -->
+      <section data-view="eleves" data-title="Élèves" data-sub="94 élèves · 68 familles · saison 2026-2027" data-acts='<a class="btn" href="#eleves">Exporter en Excel</a><a class="btn pri" href="#inscription">+ Inscrire au guichet</a>'>
+        <div class="card">
+          <header>
+            <div class="seg"><button class="on">Tous · 94</button><button>Enfants · 71</button><button>Adultes · 23</button><button>Fratries · 19</button></div>
+            <span class="sp"></span>
+            <span class="search">⌕ <span>Rechercher un élève, une famille…</span></span>
+            <span class="btn sm">Instrument : tous ▾</span><span class="btn sm">Professeur : tous ▾</span><span class="btn sm">Année 2026-2027 ▾</span>
+          </header>
+          <div class="tw"><table class="t" id="t-eleves"></table></div>
+        </div>
+      </section>
+
+      <!-- ===== Inscriptions et places ===== -->
+      <section data-view="places" data-title="Inscriptions et places restantes" data-sub="Ouverture des inscriptions le 15 juin · réinscriptions prioritaires jusqu'au 30 juin" data-acts='<a class="btn" href="#places">Publier les places libres</a><a class="btn pri" href="#places">Proposer une place</a>'>
+        <div class="kpis" id="k-places"></div>
+        <div class="grid2">
+          <div class="card"><header><h2>Places par cours</h2><span class="sp"></span><div class="seg"><button class="on">Instruments</button><button>Collectifs</button></div></header><div class="tw"><table class="t" id="t-places"></table></div></div>
+          <div class="stack">
+            <div class="card"><header><h2>Dossiers reçus par semaine</h2></header><div class="body" id="chart-ins"></div></div>
+            <div class="card"><header><h2>Liste d'attente</h2><span class="sp"></span><span class="muted sm">dans l'ordre d'arrivée</span></header><div class="list" id="wait"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Encaissements ===== -->
+      <section data-view="encaissements" data-title="Encaissements" data-sub="Chaque échéance suivie jusqu'à la banque · saison 2026-2027" data-acts='<a class="btn" href="#encaissements">Relancer les retards</a><a class="btn pri" href="#encaissements">+ Enregistrer un règlement</a>'>
+        <div class="kpis" id="k-enc"></div>
+        <div class="grid2">
+          <div class="card"><header><h2>Échéances</h2><span class="sp"></span><div class="seg"><button class="on">Toutes</button><button>À remettre · 4</button><button>En retard · 3</button></div></header><div class="tw"><table class="t" id="t-enc"></table></div></div>
+          <div class="stack">
+            <div class="card"><header><h2>Bordereau de remise n° 7</h2><span class="sp"></span><span class="b warn">à déposer</span></header><div class="tw"><table class="t" id="t-bord"></table></div><div class="body" style="display:flex;gap:8px;border-top:1px solid var(--line)"><span class="btn pri sm">Générer le bordereau PDF</span><span class="btn sm">Marquer comme déposé</span></div></div>
+            <div class="card"><header><h2>Par mode de règlement</h2></header><div style="padding:8px 0" id="modes"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Comptabilité ===== -->
+      <section data-view="compta" data-title="Comptabilité de l'association" data-sub="Exercice du 1er septembre 2026 au 31 août 2027 · comptabilité de trésorerie" data-acts='<a class="btn" href="#compta">Exporter pour le CA</a><a class="btn pri" href="#compta">Générer le bilan PDF</a>'>
+        <div class="kpis" id="k-compta"></div>
+        <div class="grid2e">
+          <div class="card"><header><h2>Recettes par catégorie</h2><span class="sp"></span><span class="muted sm">les inscriptions encaissées arrivent seules</span></header><div class="tw"><table class="t" id="t-rec"></table></div></div>
+          <div class="card"><header><h2>Dépenses par catégorie</h2></header><div class="tw"><table class="t" id="t-dep"></table></div></div>
+        </div>
+        <div class="grid2e">
+          <div class="card"><header><h2>Résultat par événement</h2></header><div id="events"></div></div>
+          <div class="card"><header><h2>Saisir une opération</h2><span class="sp"></span><div class="seg"><button class="on">Dépense</button><button>Recette</button></div></header>
+            <div class="body"><div class="form">
+              <label>Catégorie<span class="in">Événements · location de salle</span></label>
+              <label>Événement<span class="in">Audition de Noël</span></label>
+              <label>Montant<span class="in tnum">120,00 €</span></label>
+              <label>Date<span class="in">05/11/2026</span></label>
+              <label class="full">Libellé<span class="in">Location de la salle des fêtes, audition du 13/12</span></label>
+              <div class="full drop">Justificatif joint : facture-salle-des-fetes.pdf ✓</div>
+              <div class="full" style="display:flex;gap:8px;justify-content:flex-end"><span class="btn">Annuler</span><span class="btn pri">Enregistrer la dépense</span></div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Formulaire famille, étape 2 ===== -->
+      <section data-view="inscription" data-title="Formulaire d'inscription en ligne" data-sub="Ce que voient les familles, sur leur téléphone" data-acts='<a class="btn" href="#inscription-cours">Étape suivante</a>'>
+        <div class="stage">
+          <div class="stage-txt">
+            <p class="muted sm" style="text-transform:uppercase;letter-spacing:.06em;font-weight:700">Côté familles</p>
+            <h2>L'inscription se fait en ligne, la fratrie est reconnue</h2>
+            <p>La famille indique si un enfant est déjà inscrit. L'outil la retrouve par son nom, elle confirme le rattachement et la réduction s'applique d'elle-même.</p>
+            <ul class="sm"><li>Plus de formulaire PDF à renvoyer ni à ressaisir</li><li>Un seul dossier par famille, d'une année sur l'autre</li><li>Le bureau reçoit le dossier déjà rangé</li></ul>
+          </div>
+          <div class="phone"><div class="scr">
+            <div class="fh"><div class="brand"><i>♪</i><div>École de Musique de Givry<small>Inscription en ligne · saison 2026-2027</small></div></div><h3>Inscrire un élève</h3><div class="stp">Étape 2 sur 3 · famille et élève</div><div class="prog"><span class="on"></span><span class="on"></span><span></span></div></div>
+            <div class="fb">
+              <div class="fc"><h4><span class="n done">✓</span>Responsable légal</h4><div class="fin"><div>Camille R.<small>06 •• •• •• 41 · Mellecey</small></div><span class="b ok">rempli</span></div></div>
+              <div class="fc">
+                <h4><span class="n">2</span>Un enfant de votre famille est-il déjà inscrit ?</h4>
+                <div class="yn"><button class="on" type="button">Oui</button><button type="button">Non</button></div>
+                <div class="fin"><div><small>Nom de famille</small>Roux</div><span class="muted sm">⌕</span></div>
+                <div class="match"><span class="av">R</span><div><b>Famille R. · Mellecey</b><span class="muted sm">Chloé, 12 ans · flûte traversière · 3e année</span></div></div>
+                <div class="yn"><button class="on" type="button">✓ C'est ma famille</button><button type="button">Ce n'est pas moi</button></div>
+                <div class="note"><span>♪</span><span>Réduction fratrie appliquée : −10 % sur le tarif du 2e enfant.</span></div>
+              </div>
+              <div class="fc"><h4><span class="n">3</span>Élève à inscrire</h4><div class="fin"><div><small>Prénom</small>Tom</div></div><div class="yn"><div class="fin"><div><small>Né le</small>14/03/2018</div></div><div class="fin"><div><small>Année scolaire</small>2026-2027</div></div></div></div>
+              <a class="cta" href="#inscription-cours">Choisir l'instrument</a>
+            </div>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- ===== Formulaire famille, étape 3 ===== -->
+      <section data-view="inscription-cours" data-title="Formulaire d'inscription en ligne" data-sub="Choix du cours et tarif calculé selon la grille" data-acts='<a class="btn" href="#inscription">Étape précédente</a>'>
+        <div class="stage">
+          <div class="stage-txt">
+            <p class="muted sm" style="text-transform:uppercase;letter-spacing:.06em;font-weight:700">Côté familles</p>
+            <h2>Instrument, année, tarif : tout est dans le même parcours</h2>
+            <p>Les places restantes sont visibles. La formation musicale s'ajoute d'office, le tarif suit la grille de l'école et le paiement peut se faire en trois fois.</p>
+          </div>
+          <div class="phone"><div class="scr">
+            <div class="fh"><div class="brand"><i>♪</i><div>École de Musique de Givry<small>Inscription en ligne · saison 2026-2027</small></div></div><h3>Le cours de Tom</h3><div class="stp">Étape 3 sur 3 · cours et règlement</div><div class="prog"><span class="on"></span><span class="on"></span><span class="on"></span></div></div>
+            <div class="fb">
+              <div class="fc"><h4><span class="n">4</span>Quel instrument ?</h4><div class="igrid" id="igrid"></div><div class="muted xs">Piano et batterie complets : inscription sur liste d'attente.</div></div>
+              <div class="fc"><h4><span class="n">5</span>Niveau et créneau</h4><div class="yn"><div class="fin"><div><small>Niveau</small>1re année</div></div><div class="fin"><div><small>Créneau</small>Mer. 14 h</div></div></div><div class="note"><span>♪</span><span>Formation musicale cycle 1 (45 min, mercredi 15 h) ajoutée d'office : elle accompagne l'instrument.</span></div></div>
+              <div class="fc"><h4><span class="n">6</span>Tarif selon la grille 2026-2027</h4>
+                <div class="prix"><div><span>Guitare · cours individuel 30 min</span><span class="tnum">345 €</span></div><div><span>Formation musicale</span><span>incluse</span></div><div><span>Réduction fratrie (−10 %)</span><span class="red tnum">− 34,50 €</span></div><div><span>Adhésion familiale</span><span class="muted">déjà réglée</span></div><div class="tt"><span>Total</span><span class="tnum">310,50 €</span></div></div>
+                <div class="yn"><button type="button">En 1 fois</button><button class="on" type="button">En 3 fois · 103,50 €</button></div>
+              </div>
+              <a class="cta" href="#inscription-cours">Envoyer l'inscription</a>
+            </div>
+          </div></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar"><a href="#accueil" data-v="accueil"><span>⌂</span>Accueil</a><a href="#eleves" data-v="eleves"><span>♫</span>Élèves</a><a href="#places" data-v="places"><span>▦</span>Places</a><a href="#encaissements" data-v="encaissements"><span>€</span>Encaiss.</a><a href="#compta" data-v="compta"><span>≡</span>Comptes</a></nav>
+<div class="fict" data-fict>Exemple de données fictives</div>
+
+<script>
+const I = { // instruments : abréviation, couleur
+  Guitare:["Gu","#2f9e5b"], Piano:["Pi","#344054"], Batterie:["Ba","#e5533d"], "Flûte":["Fl","#1f78c8"], Clarinette:["Cl","#5b4bc4"],
+  Saxophone:["Sx","#0e9384"], Trompette:["Tp","#f39a1e"], Violon:["Vi","#b54708"], "Accordéon":["Ac","#9e2fae"], "Éveil musical":["Év","#e24a8d"], "Chorale adulte":["Ch","#c27a14"]
+};
+const inst = (n) => `<span class="inst"><i style="background:${I[n][1]}">${I[n][0]}</i>${n}</span>`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+const eur = (n, d=0) => n.toLocaleString('fr-FR', { minimumFractionDigits:d, maximumFractionDigits:d }) + ' €';
+const b = (c, t) => `<span class="b ${c}">${esc(t)}</span>`;
+const kpi = (k) => `<div class="kpi${k.alert?' alert':''}"><div class="l">${k.l}</div><div class="v tnum">${k.v}</div>${k.bar!=null?`<div class="bar"><i style="width:${k.bar}%"></i></div>`:''}<div class="d">${k.d||''}</div></div>`;
+const $ = (s) => document.querySelector(s);
+
+const D = {
+  eleves: [
+    ["Chloé R.",12,"Mellecey","Famille R. · 2 enfants","Flûte","Claire B.","Mer. 16 h","3e année","ok","À jour","ok","Complet"],
+    ["Tom R.",8,"Mellecey","Famille R. · 2 enfants","Guitare","Julien M.","Mer. 14 h","1re année","info","1/3 reçu","warn","Incomplet"],
+    ["Martine G.",58,"Dracy-le-Fort","—","Chorale adulte","Anne P.","Jeu. 20 h","adulte","ok","À jour","ok","Complet"],
+    ["Inès B.",12,"Jambles","Famille B. · 3 enfants","Guitare","Julien M.","Mar. 17 h 30","2e année","late","En retard","ok","Complet"],
+    ["Noé B.",10,"Jambles","Famille B. · 3 enfants","Batterie","Thomas R.","Ven. 18 h","2e année","late","En retard","ok","Complet"],
+    ["Lou B.",6,"Jambles","Famille B. · 3 enfants","Éveil musical","Anne P.","Sam. 10 h","éveil","late","En retard","ok","Complet"],
+    ["Jade L.",13,"Saint-Désert","—","Saxophone","Marc V.","Lun. 18 h","4e année","ok","À jour","ok","Complet"],
+    ["Hugo F.",9,"Givry","—","Piano","Sophie L.","Mar. 17 h","1re année","info","1/3 reçu","ok","Complet"],
+    ["Lucas D.",15,"Chalon-sur-Saône","—","Trompette","Marc V.","Lun. 17 h 30","cycle 2","ok","À jour","ok","Complet"],
+    ["Emma T.",9,"Givry","Famille T. · 2 enfants","Clarinette","Claire B.","Mer. 10 h","2e année","ok","À jour","warn","Incomplet"],
+    ["Léa T.",11,"Givry","Famille T. · 2 enfants","Violon","Élise G.","Mer. 11 h","3e année","ok","À jour","ok","Complet"],
+    ["Paul S.",44,"Saint-Denis-de-Vaux","—","Accordéon","Bruno K.","Jeu. 18 h 30","adulte","info","1/3 reçu","ok","Complet"],
+    ["Maël C.",7,"Givry","—","Éveil musical","Anne P.","Sam. 11 h","éveil","ok","À jour","ok","Complet"]
+  ],
+  places: [
+    ["Piano","Sophie L.",14,14,4],["Guitare","Julien M.",18,16,0],["Batterie","Thomas R.",8,8,2],["Flûte","Claire B.",10,6,0],
+    ["Clarinette","Claire B.",8,5,0],["Saxophone","Marc V.",8,7,0],["Trompette","Marc V.",8,4,0],["Violon","Élise G.",8,6,0],
+    ["Accordéon","Bruno K.",6,3,0],["Éveil musical","Anne P.",12,11,1],["Chorale adulte","Anne P.",25,14,0]
+  ],
+  wait: [["Arthur P.","Piano","depuis le 18/06",true],["Zoé M.","Piano","depuis le 22/06"],["Nina K.","Batterie","depuis le 26/06"],["Sacha L.","Piano","depuis le 02/07"],["Rose A.","Batterie","depuis le 29/08"],["Élio V.","Éveil musical","depuis le 04/09"],["Manon B.","Piano","depuis le 15/09"]],
+  weeks: [["15/06",28],["22/06",19],["29/06",11],["06/07",6],["24/08",9],["31/08",17],["07/09",8],["14/09",4]],
+  enc: [
+    ["06/11","Famille R.","Tom · 1re échéance","Chèque n° 4 521 · Crédit Agricole",103.5,"warn","À remettre"],
+    ["06/11","Famille T.","Emma et Léa · 2/3","Chèque n° 1 188 · La Banque Postale",201,"warn","À remettre"],
+    ["05/11","Famille F.","Hugo · 1/3","Virement · réf. EMG-26-031",115,"ok","Encaissé"],
+    ["04/11","Martine G.","Chorale · solde","Chèques vacances ANCV",150,"warn","À remettre"],
+    ["03/11","Famille C.","Maël · 1 fois","Virement · réf. EMG-26-029",180,"ok","Encaissé"],
+    ["02/11","Paul S.","Accordéon · 1/3","Chèque n° 7 705 · Société Générale",122,"warn","À remettre"],
+    ["15/10","Famille B.","3 enfants · 2/3","Chèque attendu",274,"late","En retard"],
+    ["15/10","Famille K.","Nora · 2/3","Chèque attendu",137,"late","En retard"],
+    ["15/10","Famille M.","Léon · 2/3","Virement attendu",137,"late","En retard"],
+    ["15/01","Famille R.","Tom · 2/3","Chèque remis, encaissement prévu",103.5,"idle","Prévu"]
+  ],
+  rec: [["Inscriptions encaissées",22980,true],["Subvention de la commune de Givry",3000],["Subvention du département",1000],["Dons",280],["Concerts et buvette",200]],
+  dep: [["Salaires et charges des professeurs",17900],["Événements",1080],["Assurance",610],["Location et entretien d'instruments",820],["Cotisation fédération (CMF)",390],["Partitions et fournitures",460],["Frais bancaires",120]],
+  events: [["Audition de Noël","13/12 · prévisionnel",340,380],["Concert de printemps","avec l'Harmonie · 04/04",900,620],["Stage d'orchestre","vacances d'hiver",450,380],["Fête de la musique","21/06",220,120]]
+};
+
+function render(){
+  // Accueil
+  $('#k-accueil').innerHTML = [
+    {l:"Élèves inscrits",v:"94",d:'<span style="color:var(--ok)">+6 cette semaine</span>'},
+    {l:"Dossiers incomplets",v:"4",d:'<span class="muted">pièces ou autorisations manquantes</span>',alert:true},
+    {l:"Encaissé",v:'22 980 € <small>/ 31 450</small>',bar:73,d:'<span class="muted">73 % des montants de la saison</span>'},
+    {l:"Places restantes",v:"31",d:'<span class="muted">2 cours complets · 7 en attente</span>'}
+  ].map(kpi).join('');
+  $('#todo').innerHTML = [
+    ["Remettre 4 chèques et 1 lot de chèques vacances en banque","bordereau n° 7 prêt · 576,50 €","#encaissements"],
+    ["Relancer 3 familles en retard sur l'échéance d'octobre","mail préparé, à valider","#encaissements"],
+    ["Proposer la place de piano libérée à Arthur P.","1er de la liste d'attente","#places"],
+    ["Compléter 4 dossiers","2 droits à l'image, 2 attestations d'assurance","#eleves"],
+    ["Saisir la facture de la salle des fêtes","audition de Noël","#compta"]
+  ].map((t,i)=>`<label class="li"><input type="checkbox" class="chk" ${i===4?'checked':''}><span class="grow"><b style="font-weight:600">${t[0]}</b><div class="muted sm">${t[1]}</div></span><a class="btn sm" href="${t[2]}">Ouvrir</a></label>`).join('');
+  $('#t-last').innerHTML = '<tr><th>Date</th><th>Famille</th><th>Mode</th><th class="r">Montant</th></tr>' + D.enc.slice(0,5).map(e=>`<tr><td class="tnum">${e[0]}</td><td>${e[1]}<div class="muted xs">${e[2]}</div></td><td class="sm">${e[3]}</td><td class="r tnum"><b>${eur(e[4],e[4]%1?2:0)}</b></td></tr>`).join('');
+  $('#fill-mini').innerHTML = D.places.slice(0,7).map(p=>`<div class="fill"><span>${inst(p[0])}</span><span class="bar ${p[3]>=p[2]?'full':''}"><i style="width:${Math.round(p[3]/p[2]*100)}%"></i></span><span class="tnum sm r" style="text-align:right">${p[3]}/${p[2]}</span></div>`).join('');
+
+  // Élèves
+  $('#t-eleves').innerHTML = '<tr><th>Élève</th><th>Famille</th><th>Discipline</th><th>Professeur</th><th>Créneau</th><th>Niveau</th><th>Règlement</th><th>Dossier</th></tr>' +
+    D.eleves.map(e=>`<tr><td><div class="who"><span class="av">${e[0].split(' ').map(x=>x[0]).join('')}</span><div><b>${e[0]}</b><span class="muted xs">${e[1]} ans · ${e[2]}</span></div></div></td><td class="sm">${e[3]==='—'?'<span class="muted">—</span>':e[3]}</td><td>${inst(e[4])}</td><td class="sm">${e[5]}</td><td class="sm tnum">${e[6]}</td><td class="sm">${e[7]}</td><td>${b(e[8],e[9])}</td><td>${b(e[10],e[11])}</td></tr>`).join('');
+
+  // Places
+  const cap = D.places.reduce((a,p)=>a+p[2],0), ins = D.places.reduce((a,p)=>a+p[3],0);
+  $('#k-places').innerHTML = [
+    {l:"Dossiers reçus",v:"102",d:'<span class="muted">depuis le 15 juin</span>'},
+    {l:"Inscriptions validées",v:"94",d:'<span class="muted">dont 61 réinscriptions</span>'},
+    {l:"Places restantes",v:String(cap-ins),bar:Math.round(ins/cap*100),d:`<span class="muted">${ins} places occupées sur ${cap}</span>`},
+    {l:"Liste d'attente",v:"7",d:'<span class="muted">piano 4 · batterie 2 · éveil 1</span>',alert:true}
+  ].map(kpi).join('');
+  $('#t-places').innerHTML = '<tr><th>Cours</th><th>Professeur</th><th>Remplissage</th><th class="r">Inscrits</th><th class="r">Restantes</th><th class="r">Attente</th></tr>' +
+    D.places.map(p=>{const r=p[2]-p[3];return `<tr><td>${inst(p[0])}</td><td class="sm">${p[1]}</td><td style="min-width:120px"><span class="bar ${r<=0?'full':''}" style="display:block"><i style="width:${Math.round(p[3]/p[2]*100)}%"></i></span></td><td class="r tnum">${p[3]}/${p[2]}</td><td class="r">${r<=0?b('warn','complet'):'<b class="tnum">'+r+'</b>'}</td><td class="r tnum">${p[4]||'<span class="muted">—</span>'}</td></tr>`;}).join('');
+  // graphique à l'échelle : 0 à 30 dossiers
+  const W=420,H=170,L=26,B=24,T=10,max=30, bw=(W-L-8)/D.weeks.length;
+  const y=v=>H-B-(v/max)*(H-B-T);
+  let svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dossiers reçus par semaine">`;
+  [0,10,20,30].forEach(v=>{svg+=`<line x1="${L}" x2="${W-4}" y1="${y(v)}" y2="${y(v)}" stroke="#e4e7ec"/><text x="${L-6}" y="${y(v)+4}" font-size="10" text-anchor="end" fill="#667085">${v}</text>`;});
+  D.weeks.forEach((w,i)=>{const x=L+6+i*bw;svg+=`<rect x="${x}" y="${y(w[1])}" width="${bw-10}" height="${H-B-y(w[1])}" rx="3" fill="${i<4?'#1f78c8':'#8cbbe6'}"/><text x="${x+(bw-10)/2}" y="${y(w[1])-4}" font-size="10" text-anchor="middle" fill="#16181d" font-weight="700">${w[1]}</text><text x="${x+(bw-10)/2}" y="${H-8}" font-size="9.5" text-anchor="middle" fill="#667085">${w[0]}</text>`;});
+  svg+='</svg><div class="muted xs" style="display:flex;gap:14px;margin-top:4px"><span><b style="color:#1f78c8">■</b> réinscriptions prioritaires</span><span><b style="color:#8cbbe6">■</b> nouveaux élèves (forum du 29 août)</span></div>';
+  $('#chart-ins').innerHTML=svg;
+  $('#wait').innerHTML = D.wait.map((w,i)=>`<div class="li"><span class="tnum muted" style="width:16px;font-weight:700">${i+1}</span><span class="grow"><b style="font-weight:600">${w[0]}</b><div class="muted sm">${w[1]} · ${w[2]}</div></span>${w[3]?'<span class="btn pri sm">Proposer la place</span>':''}</div>`).join('');
+
+  // Encaissements
+  $('#k-enc').innerHTML = [
+    {l:"Attendu sur la saison",v:"31 450 €",d:'<span class="muted">94 élèves · 182 échéances</span>'},
+    {l:"Encaissé",v:"22 980 €",bar:73,d:'<span class="muted">73 % · à jour au 6 novembre</span>'},
+    {l:"À remettre en banque",v:"576,50 €",d:'<span class="muted">4 chèques · 1 lot ANCV</span>'},
+    {l:"En retard",v:"548 €",d:'<span style="color:var(--late)">3 familles · échéance du 15/10</span>',alert:true}
+  ].map(kpi).join('');
+  $('#t-enc').innerHTML = '<tr><th>Date</th><th>Famille</th><th>Mode et référence</th><th class="r">Montant</th><th>Statut</th></tr>' +
+    D.enc.map(e=>`<tr><td class="tnum">${e[0]}</td><td><b style="font-weight:600">${e[1]}</b><div class="muted xs">${e[2]}</div></td><td class="sm">${e[3]}</td><td class="r tnum"><b>${eur(e[4],e[4]%1?2:0)}</b></td><td>${b(e[5],e[6])}</td></tr>`).join('');
+  const bord=D.enc.filter(e=>e[6]==="À remettre");
+  $('#t-bord').innerHTML = '<tr><th>Famille</th><th>Pièce</th><th class="r">Montant</th></tr>'+bord.map(e=>`<tr><td>${e[1]}</td><td class="sm">${e[3].replace(/ ·.*/,'')}</td><td class="r tnum">${eur(e[4],2)}</td></tr>`).join('')+`<tr class="tot"><td colspan="2">Total du bordereau</td><td class="r tnum">${eur(bord.reduce((a,e)=>a+e[4],0),2)}</td></tr>`;
+  $('#modes').innerHTML = [["Chèques",14860,65],["Virements",6420,28],["Chèques vacances ANCV",1250,5],["Espèces",450,2]].map(m=>`<div class="fill"><span class="sm">${m[0]}</span><span class="bar"><i style="width:${m[2]}%"></i></span><span class="tnum sm" style="text-align:right">${eur(m[1])}</span></div>`).join('');
+
+  // Comptabilité
+  const R=D.rec.reduce((a,r)=>a+r[1],0), Dp=D.dep.reduce((a,r)=>a+r[1],0);
+  $('#k-compta').innerHTML = [
+    {l:"Recettes de l'exercice",v:eur(R),d:'<span class="muted">dont 22 980 € d\'inscriptions</span>'},
+    {l:"Dépenses de l'exercice",v:eur(Dp),d:'<span class="muted">au 6 novembre</span>'},
+    {l:"Résultat à date",v:'<span style="color:var(--ok)">+ '+eur(R-Dp)+'</span>',d:'<span class="muted">avant les salaires de novembre à août</span>'},
+    {l:"Justificatifs manquants",v:"2",d:'<span class="muted">2 dépenses sans facture jointe</span>',alert:true}
+  ].map(kpi).join('');
+  $('#t-rec').innerHTML='<tr><th>Catégorie</th><th class="r">Montant</th></tr>'+D.rec.map(r=>`<tr class="${r[2]?'auto':''}"><td>${r[0]}</td><td class="r tnum">${eur(r[1])}</td></tr>`).join('')+`<tr class="tot"><td>Total des recettes</td><td class="r tnum">${eur(R)}</td></tr>`;
+  $('#t-dep').innerHTML='<tr><th>Catégorie</th><th class="r">Montant</th></tr>'+D.dep.map(r=>`<tr><td>${r[0]}</td><td class="r tnum">${eur(r[1])}</td></tr>`).join('')+`<tr class="tot"><td>Total des dépenses</td><td class="r tnum">${eur(Dp)}</td></tr>`;
+  $('#events').innerHTML = D.events.map(e=>{const r=e[2]-e[3];return `<div class="ev"><b>${e[0]}</b><span class="r ${r>=0?'pos':'neg'} tnum">${r>=0?'+ ':'− '}${eur(Math.abs(r))}</span><span class="muted sm">${e[1]}</span><span class="muted sm tnum" style="text-align:right">recettes ${eur(e[2])} · dépenses ${eur(e[3])}</span></div>`;}).join('');
+
+  // Formulaire : grille d'instruments
+  $('#igrid').innerHTML = ["Guitare","Piano","Batterie","Flûte","Clarinette","Saxophone","Trompette","Violon"].map(n=>{const p=D.places.find(x=>x[0]===n);const full=p&&p[3]>=p[2];return `<button type="button" class="${n==='Guitare'?'on':''}"${full?' style="opacity:.55"':''}><i style="background:${I[n][1]}">${I[n][0]}</i>${n}<span class="muted" style="font-size:9.5px;font-weight:600">${full?'attente':(p[2]-p[3])+(p[2]-p[3]>1?' places':' place')}</span></button>`;}).join('');
+}
+
+function show(){
+  const v = location.hash.slice(1) || 'accueil';
+  const ok = document.querySelector(`section[data-view="${v}"]`) ? v : 'accueil';
+  document.querySelectorAll('section[data-view]').forEach(s=>s.classList.toggle('on', s.dataset.view===ok));
+  const nv = ok.startsWith('inscription') ? 'inscription' : ok;
+  document.querySelectorAll('[data-v]').forEach(a=>a.classList.toggle('on', a.dataset.v===nv));
+  document.body.classList.toggle('famille', ok.startsWith('inscription'));
+  const s = document.querySelector(`section[data-view="${ok}"]`);
+  $('#title').textContent = $('#mtitle').textContent = s.dataset.title || '';
+  $('#subtitle').textContent = $('#msubtitle').textContent = s.dataset.sub || '';
+  $('#acts').innerHTML = s.dataset.acts || '';
+  window.scrollTo(0,0);
+}
+// petites interactions : segments et cases
+document.addEventListener('click', e=>{
+  const sb=e.target.closest('.seg button, .yn button, .igrid button'); if(!sb) return;
+  sb.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===sb));
+});
+render();
+addEventListener('hashchange', show);
+show();
+</script>
