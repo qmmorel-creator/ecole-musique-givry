@@ -7,7 +7,7 @@ export default defineConfig({
   workers: 1,
   reporter: [['list']],
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: process.env.BASE_URL ?? 'http://localhost:4173',
     locale: 'fr-FR',
     timezoneId: 'Europe/Paris',
     acceptDownloads: true,
@@ -16,7 +16,7 @@ export default defineConfig({
     { name: 'telephone', use: { ...devices['Pixel 7'], viewport: { width: 375, height: 812 } }, testMatch: /mobile\.spec\.ts/ },
     { name: 'bureau', use: { ...devices['Desktop Chrome'] }, testIgnore: /mobile\.spec\.ts/ },
   ],
-  webServer: {
+  webServer: process.env.BASE_URL ? undefined : {
     command: 'npm run preview',
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
