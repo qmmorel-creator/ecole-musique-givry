@@ -10,3 +10,4 @@ export * from './validation.ts';
 export * from './enrollmentRules.ts';
 export * from './submission.ts';
 export * from './permissions.ts';
+export * from './mails.ts';

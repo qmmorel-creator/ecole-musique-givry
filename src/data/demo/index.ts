@@ -7,7 +7,7 @@ import type {
 import { ApiError } from '../api.ts';
 import type { Attachment, Course, Enrollment, Family, MailMessage, Role, Season, Student, WaitlistEntry } from '../../domain/types.ts';
 import {
-  addDays, can, cashedOnReception, formatDateFr, formatEuros, installmentState, isBot, normalizeEmail, normalizeName,
+  addDays, can, cashedOnReception, confirmationMail, formatDateFr, formatEuros, placeOfferMail, reinscriptionMail, reminderMail, installmentState, isBot, normalizeEmail, normalizeName,
   planInstallments, planSubmission, remainingPlaces, round2, siblingMatches, syncAutoEntries, todayIso, validateCourse,
   validateInscription, type Capability, type InscriptionInput, type SiblingQuery,
 } from '../../domain/index.ts';
@@ -115,13 +115,9 @@ export function createDemoSource(): DataSource {
 
   const siteUrl = () => (typeof location !== 'undefined' ? location.origin : 'https://ecole-musique-givry.netlify.app');
 
-  const confirmationMail = (s: DemoState, to: string, guardianFirst: string, student: Student, course: Course, res: SubmitResult, season: Season) => {
-    const lines = res.pricing.lines.map((l) => `  · ${l.label} : ${l.note ?? formatEuros(l.amount, true)}`).join('\n');
-    const ech = res.installments.map((i) => `  · ${i.rank}/${i.count} : ${formatEuros(i.amount, true)} au ${formatDateFr(i.dueOn)}`).join('\n');
-    const body = res.outcome === 'liste_attente'
-      ? `Bonjour ${guardianFirst},\n\nLe cours de ${course.discipline} est complet pour la saison ${season.label}. ${student.firstName} est inscrit(e) sur la liste d'attente (référence ${res.reference}). Nous vous écrirons dès qu'une place se libère, dans l'ordre d'arrivée des demandes.\n\nLe bureau de l'École de Musique de Givry`
-      : `Bonjour ${guardianFirst},\n\nNous avons bien reçu l'inscription de ${student.firstName} en ${course.discipline} pour la saison ${season.label} (référence ${res.reference}).\n\nTarif selon la grille de l'école :\n${lines}\n  Total : ${formatEuros(res.pricing.total, true)}\n\nÉchéances :\n${ech}\n${res.siblingCheck === 'a_verifier' ? "\nLe rattachement à votre famille sera vérifié par le bureau ; la réduction fratrie éventuelle sera appliquée à ce moment-là.\n" : ''}\nLe dossier sera validé par le bureau. Vous pouvez répondre à ce message pour toute question.\n\nLe bureau de l'École de Musique de Givry`;
-    mail(s, { to, subject: res.outcome === 'liste_attente' ? 'Liste d’attente · École de Musique de Givry' : 'Inscription reçue · École de Musique de Givry', body, kind: 'confirmation', status: 'envoye', sentAt: nowIso(), validatedBy: null });
+  const sendConfirmation = (s: DemoState, to: string, guardianFirst: string, student: Student, course: Course, res: SubmitResult, season: Season) => {
+    const m = confirmationMail({ guardianFirstName: guardianFirst, studentFirstName: student.firstName, discipline: course.discipline, season: season.label, reference: res.reference, outcome: res.outcome, pricing: res.pricing, installments: res.installments, siblingCheck: res.siblingCheck });
+    mail(s, { to, ...m, kind: 'confirmation', status: 'envoye', sentAt: nowIso(), validatedBy: null });
   };
 
   /** Crée l'inscription ou la demande de liste d'attente à partir de la décision du domaine. */
@@ -260,7 +256,7 @@ export function createDemoSource(): DataSource {
       const token = uid();
       s.continuations[token] = { familyId: family.id, expires: Date.now() + 2 * 3600_000 };
       res.continuationToken = token;
-      confirmationMail(s, g.email.trim(), g.firstName.trim(), student, course, res, season);
+      sendConfirmation(s, g.email.trim(), g.firstName.trim(), student, course, res, season);
       audit(s, 'Formulaire en ligne', res.outcome === 'liste_attente' ? 'Demande de liste d’attente' : 'Inscription reçue', 'enrollments', null, `${student.firstName} ${student.lastName} · ${course.discipline}${siblingCheck === 'a_verifier' ? ' · rattachement à vérifier' : ''}`);
       save();
       return res;
@@ -310,7 +306,7 @@ export function createDemoSource(): DataSource {
         if (!student || !course) throw new ApiError('Élève ou cours inconnu.');
         const res = createFromPlan(s, { season, course, family, student, level: ch.level, slot: ch.slot, plan: input.plan, method: input.intendedMethod, imageRights: input.imageRights, siblingCheck: family.siblingCheck === 'a_verifier' ? 'a_verifier' : (s.enrollments.some((e) => e.familyId === family.id && e.seasonId === season.id) ? 'validee' : 'aucun'), source: 'reinscription', status: 'a_valider' });
         results.push(res);
-        if (g) confirmationMail(s, g.email, g.firstName, student, course, res, season);
+        if (g) sendConfirmation(s, g.email, g.firstName, student, course, res, season);
         audit(s, 'Réinscription en ligne', 'Réinscription reçue', 'enrollments', null, `${student.firstName} ${student.lastName} · ${course.discipline}`);
       }
       save();
@@ -426,7 +422,7 @@ export function createDemoSource(): DataSource {
       const g = primaryGuardian(s, w.familyId);
       w.status = 'proposee';
       w.proposedAt = nowIso();
-      if (g) mail(s, { to: g.email, subject: `Une place se libère en ${course.discipline}`, body: `Bonjour ${g.firstName},\n\nUne place s'est libérée en ${course.discipline} (${course.teacher}). Elle est proposée à ${st.firstName}, premier ou première de la liste d'attente.\n\nMerci de nous confirmer votre réponse sous 7 jours en répondant à ce message.\n\nLe bureau de l'École de Musique de Givry`, kind: 'proposition_place', status: 'envoye', sentAt: nowIso(), validatedBy: actor.fullName });
+      if (g) mail(s, { to: g.email, ...placeOfferMail({ guardianFirstName: g.firstName, studentFirstName: st.firstName, discipline: course.discipline, teacher: course.teacher }), kind: 'proposition_place', status: 'envoye', sentAt: nowIso(), validatedBy: actor.fullName });
       audit(s, actor.fullName, 'Place proposée', 'waitlist', waitlistId, `${st.firstName} ${st.lastName} · ${course.discipline}`);
       save();
     },
@@ -523,12 +519,8 @@ export function createDemoSource(): DataSource {
         const g = primaryGuardian(s, familyId);
         if (!g) continue;
         if (s.mails.some((m) => m.kind === 'relance' && m.status === 'brouillon' && m.to === g.email)) continue;
-        const total = round2(list.reduce((a, i) => a + i.amount, 0));
-        const detail = list.map((i) => {
-          const st = s.students.find((x) => x.id === s.enrollments.find((e) => e.id === i.enrollmentId)?.studentId);
-          return `  · ${st?.firstName ?? ''}, échéance ${i.rank}/${i.count} du ${formatDateFr(i.dueOn)} : ${formatEuros(i.amount, true)}`;
-        }).join('\n');
-        mail(s, { to: g.email, subject: 'Rappel de règlement · École de Musique de Givry', body: `Bonjour ${g.firstName},\n\nSauf erreur de notre part, le règlement suivant n'a pas encore été reçu :\n${detail}\n  Total : ${formatEuros(total, true)}\n\nVous pouvez le déposer lors d'un cours ou faire un virement. Si vous l'avez déjà fait, merci de ne pas tenir compte de ce message.\n\nLe bureau de l'École de Musique de Givry`, kind: 'relance', status: 'brouillon', sentAt: null, validatedBy: null });
+        const lines = list.map((i) => ({ studentFirstName: s.students.find((x) => x.id === s.enrollments.find((e) => e.id === i.enrollmentId)?.studentId)?.firstName ?? '', rank: i.rank, count: i.count, dueOn: i.dueOn, amount: i.amount }));
+        mail(s, { to: g.email, ...reminderMail({ guardianFirstName: g.firstName, lines }), kind: 'relance', status: 'brouillon', sentAt: null, validatedBy: null });
         n++;
       }
       audit(s, actor.fullName, 'Relances préparées', 'mail_outbox', null, `${n} mail(s) à valider`);
@@ -558,7 +550,7 @@ export function createDemoSource(): DataSource {
         const f = s.families.find((x) => x.id === id);
         const g = f && primaryGuardian(s, f.id);
         if (!f || !g) continue;
-        mail(s, { to: g.email, subject: `Réinscription ${season.label} · École de Musique de Givry`, body: `Bonjour ${g.firstName},\n\nLes réinscriptions pour la saison ${season.label} sont ouvertes. Ce lien personnel vous permet de réinscrire vos enfants en quelques clics, sans tout ressaisir :\n${siteUrl()}/reinscription/${f.reinscriptionToken}\n\nCe lien est personnel : merci de ne pas le transférer.\n\nLe bureau de l'École de Musique de Givry`, kind: 'reinscription', status: 'envoye', sentAt: nowIso(), validatedBy: actor.fullName });
+        mail(s, { to: g.email, ...reinscriptionMail({ guardianFirstName: g.firstName, season: season.label, link: `${siteUrl()}/reinscription/${f.reinscriptionToken}` }), kind: 'reinscription', status: 'envoye', sentAt: nowIso(), validatedBy: actor.fullName });
         n++;
       }
       audit(s, actor.fullName, 'Liens de réinscription envoyés', 'families', null, `${n} famille(s)`);
