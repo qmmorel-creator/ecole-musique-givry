@@ -16,7 +16,7 @@ export default function ParametresPage() {
     <>
       <PageTop title="Paramètres" sub="Valeurs par défaut proposées, à confirmer avec le bureau" />
       <main className="content" id="contenu">
-        <div className="seg" role="tablist" aria-label="Rubriques">{tabs.map(([t, l]) => <button key={t} type="button" role="tab" aria-selected={tab === t} aria-pressed={tab === t} onClick={() => setTab(t)}>{l}</button>)}</div>
+        <div className="seg" role="group" aria-label="Rubriques">{tabs.map(([t, l]) => <button key={t} type="button" aria-pressed={tab === t} onClick={() => setTab(t)}>{l}</button>)}</div>
         {tab === 'tarifs' && <TarifsTab />}
         {tab === 'cours' && <CoursTab />}
         {tab === 'saison' && <SaisonTab />}

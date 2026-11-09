@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 import { collectConsoleErrors, expectNoHorizontalScroll, freshDemo } from './helpers.ts';
 
 test('inscription complète sur téléphone, fratrie reconnue', async ({ page }) => {
@@ -46,6 +47,8 @@ test('inscription complète sur téléphone, fratrie reconnue', async ({ page })
   await page.getByLabel(/règlement intérieur/).check();
   await page.getByLabel(/informations sur l’utilisation de mes données/).check();
   await expectNoHorizontalScroll(page);
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
   await page.getByRole('button', { name: 'Envoyer l’inscription' }).click();
 
   const conf = page.getByTestId('confirmation');
